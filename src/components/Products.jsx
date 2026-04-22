@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 const Products = ({ filter = 'all', searchQuery: propSearchQuery = '' }) => {
     const [products, setProducts] = useState([]);
@@ -198,7 +198,7 @@ const Products = ({ filter = 'all', searchQuery: propSearchQuery = '' }) => {
         
         try {
             // Check if user is logged in
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('user_token');
             
             if (token) {
                 // If logged in, add to cart via API

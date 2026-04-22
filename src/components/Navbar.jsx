@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,7 +43,7 @@ const Navbar = () => {
     };
 
     const checkLoginStatus = async () => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('user_token');
         
         if (token) {
             try {
@@ -59,7 +59,7 @@ const Navbar = () => {
             } catch (error) {
                 console.error('Auth error:', error);
                 // Token might be expired
-                localStorage.removeItem('token');
+                localStorage.removeItem('user_token');
                 setIsLoggedIn(false);
                 setUser(null);
             }
@@ -70,7 +70,7 @@ const Navbar = () => {
     };
 
     const updateCartCount = async () => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('user_token');
         
         if (token) {
             // If logged in, get cart from API
@@ -120,7 +120,7 @@ const Navbar = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('user_token');
         setIsLoggedIn(false);
         setUser(null);
         setIsUserMenuOpen(false);
