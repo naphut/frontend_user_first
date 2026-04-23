@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 const SlideShow = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [slides, setSlides] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     // Default slides as fallback
     const defaultSlides = [
@@ -58,13 +57,11 @@ const SlideShow = () => {
             } catch (error) {
                 console.error('Error fetching slides:', error);
                 setSlides(defaultSlides);
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchSlides();
-    }, []);
+    }, [defaultSlides]);
 
     // Auto slide
     useEffect(() => {
