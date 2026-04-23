@@ -4,33 +4,33 @@ const SlideShow = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [slides, setSlides] = useState([]);
 
-    // Default slides as fallback
-    const defaultSlides = [
-        {
-            image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1780&q=80",
-            title: "Latest Smartphones",
-            description: "Discover the newest technology",
-            button_text: "Shop Now",
-            button_link: "/products"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1742&q=80",
-            title: "Exclusive Deals",
-            description: "Up to 40% off on selected models",
-            button_text: "Shop Now",
-            button_link: "/products"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-            title: "Premium Accessories",
-            description: "Complete your phone experience",
-            button_text: "Shop Now",
-            button_link: "/products"
-        }
-    ];
-
     // Fetch slides from backend
     useEffect(() => {
+        // Default slides as fallback - moved inside useEffect to prevent recreation
+        const defaultSlides = [
+            {
+                image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1780&q=80",
+                title: "Latest Smartphones",
+                description: "Discover the newest technology",
+                button_text: "Shop Now",
+                button_link: "/products"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1742&q=80",
+                title: "Exclusive Deals",
+                description: "Up to 40% off on selected models",
+                button_text: "Shop Now",
+                button_link: "/products"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+                title: "Premium Accessories",
+                description: "Complete your phone experience",
+                button_text: "Shop Now",
+                button_link: "/products"
+            }
+        ];
+
         const fetchSlides = async () => {
             try {
                 const response = await fetch('https://backend-ecommerce-vhi7.onrender.com/api/slideshow/');
@@ -61,7 +61,7 @@ const SlideShow = () => {
         };
 
         fetchSlides();
-    }, [defaultSlides]);
+    }, []);
 
     // Auto slide
     useEffect(() => {
