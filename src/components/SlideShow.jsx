@@ -2,24 +2,69 @@ import { useState, useEffect } from 'react';
 
 const SlideShow = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
-    
-    const slides = [
+    const [slides, setSlides] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Default slides as fallback
+    const defaultSlides = [
         {
             image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1780&q=80",
             title: "Latest Smartphones",
-            description: "Discover the newest technology"
+            description: "Discover the newest technology",
+            button_text: "Shop Now",
+            button_link: "/products"
         },
         {
             image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1742&q=80",
             title: "Exclusive Deals",
-            description: "Up to 40% off on selected models"
+            description: "Up to 40% off on selected models",
+            button_text: "Shop Now",
+            button_link: "/products"
         },
         {
             image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
             title: "Premium Accessories",
-            description: "Complete your phone experience"
+            description: "Complete your phone experience",
+            button_text: "Shop Now",
+            button_link: "/products"
         }
     ];
+
+    // Fetch slides from backend
+    useEffect(() => {
+        const fetchSlides = async () => {
+            try {
+                const response = await fetch('https://backend-ecommerce-vhi7.onrender.com/api/slideshow/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.length > 0) {
+                        // Format backend data to match component structure
+                        const formattedSlides = data.map(slide => ({
+                            image: slide.image_url.startsWith('http') 
+                                ? slide.image_url 
+                                : `https://backend-ecommerce-vhi7.onrender.com${slide.image_url}`,
+                            title: slide.title,
+                            description: slide.description || '',
+                            button_text: slide.button_text || 'Shop Now',
+                            button_link: slide.button_link || '/products'
+                        }));
+                        setSlides(formattedSlides);
+                    } else {
+                        setSlides(defaultSlides);
+                    }
+                } else {
+                    setSlides(defaultSlides);
+                }
+            } catch (error) {
+                console.error('Error fetching slides:', error);
+                setSlides(defaultSlides);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSlides();
+    }, []);
 
     // Auto slide
     useEffect(() => {
@@ -70,9 +115,14 @@ const SlideShow = () => {
                                 <p className="text-lg md:text-xl mb-8 animate-fade-in-delay">
                                     {slide.description}
                                 </p>
-                                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition duration-300 transform hover:scale-105">
-                                    Shop Now
-                                </button>
+                                {slide.button_text && (
+                                    <a 
+                                        href={slide.button_link}
+                                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition duration-300 transform hover:scale-105"
+                                    >
+                                        {slide.button_text}
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </div>
