@@ -33,21 +33,24 @@ const SlideShow = () => {
 
         const fetchSlides = async () => {
             try {
-                const response = await fetch('https://backend-ecommerce-vhi7.onrender.com/api/slideshow/');
+                const response = await fetch('http://localhost:8002/api/slideshow/');
                 if (response.ok) {
                     const data = await response.json();
                     if (data && data.length > 0) {
-                        // Format backend data to match component structure
-                        const formattedSlides = data.map(slide => ({
-                            image: slide.image_url.startsWith('http') 
-                                ? slide.image_url 
-                                : `https://backend-ecommerce-vhi7.onrender.com${slide.image_url}`,
-                            title: slide.title,
-                            description: slide.description || '',
-                            button_text: slide.button_text || 'Shop Now',
-                            button_link: slide.button_link || '/products'
-                        }));
-                        setSlides(formattedSlides);
+                        // Filter only active slides and format backend data to match component structure
+                        const formattedSlides = data
+                            .filter(slide => slide.is_active)
+                            .sort((a, b) => a.order - b.order)
+                            .map(slide => ({
+                                image: slide.image_url.startsWith('http') 
+                                    ? slide.image_url 
+                                    : `http://localhost:8002${slide.image_url}`,
+                                title: slide.title,
+                                description: slide.description || '',
+                                button_text: slide.button_text || 'Shop Now',
+                                button_link: slide.button_link || '/products'
+                            }));
+                        setSlides(formattedSlides.length > 0 ? formattedSlides : defaultSlides);
                     } else {
                         setSlides(defaultSlides);
                     }
